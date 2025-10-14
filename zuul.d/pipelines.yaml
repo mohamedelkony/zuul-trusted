@@ -10,14 +10,6 @@
     manager: independent
     success-message: check jobs succeeded
     failure-message: check jobs failed
-    start-message: |
-      Starting {pipeline.name} jobs.
-
-      Status: {item_url}
-    require:
-      github:
-        open: True
-        current-patchset: True
     trigger:
       github:
         - event: pull_request
