@@ -14,7 +14,7 @@
       Starting {pipeline.name} jobs.
       Status: {item_url}
     trigger:
-      github:
+      kony-github:
         - event: pull_request
           action:
             - opened
