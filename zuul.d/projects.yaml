@@ -14,11 +14,3 @@
       jobs:
         - noop
 
-- project:
-    name: zuul-trusted
-    check:
-      jobs:
-        - noop
-    gate:
-      jobs:
-        - noop
