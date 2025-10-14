@@ -1,7 +1,1 @@
-- tenant:
-    name: kony-tenant
-    source:
-      github:
-        config-projects:
-          - mohamedelkony/zuul-trusted
-        untrusted-projects: []
+
