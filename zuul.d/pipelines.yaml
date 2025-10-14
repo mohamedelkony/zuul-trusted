@@ -13,10 +13,6 @@
     start-message: |
       Starting {pipeline.name} jobs.
       Status: {item_url}
-    require:
-      github:
-        open: True
-        current-patchset: True
     trigger:
       github:
         - event: pull_request
