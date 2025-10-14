@@ -1,18 +1,24 @@
 - project:
-    name: mohamedelkony/E-commerce-web-application
+    name: ^.*$
+    check:
+      jobs: []
+    gate:
+      jobs: []
+
+- project:
+    name: mohamedelkony/zuul-trusted
     check:
       jobs:
         - noop
-        - base
     gate:
       jobs:
         - noop
 
 - project:
+    name: zuul-trusted
     check:
       jobs:
         - noop
-        - base
     gate:
       jobs:
         - noop
