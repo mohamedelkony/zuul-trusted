@@ -3,6 +3,7 @@
     check:
       jobs:
         - noop
+        - base
     gate:
       jobs:
         - noop
@@ -12,6 +13,7 @@
     check:
       jobs:
         - noop
+        - base
     gate:
       jobs:
         - noop
