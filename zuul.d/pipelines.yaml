@@ -12,6 +12,7 @@
     failure-message: check jobs failed
     start-message: |
       Starting {pipeline.name} jobs.
+
       Status: {item_url}
     require:
       github:
@@ -55,8 +56,6 @@
       github:
         check: failure
     start:
-      gerrit:
-        Verified: 0
       github:
         check: in_progress
         comment: false
