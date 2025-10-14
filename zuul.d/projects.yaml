@@ -1,5 +1,5 @@
 - project:
-    name: ^.*$
+    name: mohamedelkony/E-commerce-web-application
     check:
       jobs:
         - noop
@@ -9,7 +9,6 @@
         - noop
 
 - project:
-    name: mohamedelkony/zuul-trusted
     check:
       jobs:
         - noop
