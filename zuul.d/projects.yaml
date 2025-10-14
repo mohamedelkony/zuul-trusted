@@ -1,12 +1,14 @@
 - project:
     name: ^.*$
     check:
-      jobs: []
+      jobs:
+        - noop
     gate:
-      jobs: []
+      jobs:
+        - noop
 
 - project:
-    name: zuul-trusted
+    name: mohamedelkony/zuul-trusted
     check:
       jobs:
         - noop
