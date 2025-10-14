@@ -11,7 +11,7 @@
     success-message: check jobs succeeded
     failure-message: check jobs failed
     trigger:
-      github:
+      kony-github:
         - event: pull_request
           action:
             - opened
