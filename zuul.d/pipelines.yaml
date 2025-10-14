@@ -1,51 +1,66 @@
 - pipeline:
     name: check
-    description: |
-      Newly uploaded patchsets enter this pipeline to receive an
-      initial +/-1 Verified vote.
+    description: >
+      Newly created or updated GitHub pull requests enter this pipeline
+      and will report "success" or "failure".
+      For Gerrit, uploaded patchsets enter this pipeline to receive an initial
+      +/-1 Verified vote from Zuul.
+      For running a build again, add a comment "recheck" to the pull request
+      respectively the change.
     manager: independent
+    success-message: check jobs succeeded
+    failure-message: check jobs failed
+    start-message: |
+      Starting {pipeline.name} jobs.
+      Status: {item_url}
     require:
-      gerrit:
+      github:
         open: True
         current-patchset: True
     trigger:
-      gerrit:
-        - event: patchset-created
-        - event: change-restored
-        - event: comment-added
-          comment: (?i)^(Patch Set [0-9]+:)?( [\w\\+-]*)*(\n\n)?\s*recheck
+      github:
+        - event: pull_request
+          action:
+            - opened
+            - changed
+          reject: &check-trigger-reject-github
+            label: no-check
+            # a status of None means the "gate" check run is in progress
+            # i.e. check run exists but has no conclusion, yet.
+            status: zuul:.*\/gate:None
+        - event: pull_request
+          action: comment
+          comment: (?i)^\s*\/?recheck\s*$
+          reject: *check-trigger-reject-github
+        - event: pull_request
+          action: comment
+          comment: (?i)^\s*\/?recheck-debug\s*$
+          reject: *check-trigger-reject-github
+          debug: true
+        - event: pull_request
+          action: unlabeled
+          label:
+            - 'no-check'
+          reject: *check-trigger-reject-github
+        # When a user selects the "Re-run check run" option
+        - event: check_run
+          action: rerequested
+          check: .*/check:.*
+          reject: *check-trigger-reject-github
     success:
-      gerrit:
-        Verified: 1
+      github:
+        check: success
+        comment: false
     failure:
-      gerrit:
-        Verified: -1
-
-- pipeline:
-    name: gate
-    description: |
-      Changes that have been approved are enqueued in order in this
-      pipeline, and if they pass tests, will be merged.
-    manager: dependent
-    post-review: True
-    require:
-      gerrit:
-        open: True
-        current-patchset: True
-        approval:
-          - Workflow: 1
-    trigger:
-      gerrit:
-        - event: comment-added
-          approval:
-            - Workflow: 1
+      github:
+        check: failure
     start:
       gerrit:
         Verified: 0
-    success:
-      gerrit:
-        Verified: 2
-        submit: true
-    failure:
-      gerrit:
-        Verified: -2
+      github:
+        check: in_progress
+        comment: false
+    dequeue:
+      github:
+        check: cancelled
+        comment: false
