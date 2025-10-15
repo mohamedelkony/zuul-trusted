@@ -5,3 +5,10 @@
       nodes:
         - name: ubuntu-jammy
           label: ubuntu-jammy
+- job:
+    name: baseX3
+    parent: null
+    nodeset:
+      nodes:
+        - name: ubuntu-jammy
+          label: ubuntu-jammy
