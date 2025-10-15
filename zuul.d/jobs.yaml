@@ -1,5 +1,5 @@
 - job:
-    name: baseX
+    name: baseX2
     parent: null
     nodeset:
       nodes:
