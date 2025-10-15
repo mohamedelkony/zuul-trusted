@@ -12,3 +12,10 @@
       nodes:
         - name: ubuntu-jammy
           label: ubuntu-jammy
+- job:
+    name: baseX4
+    parent: null
+    nodeset:
+      nodes:
+        - name: ubuntu-jammy
+          label: ubuntu-jammy
