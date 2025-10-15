@@ -10,7 +10,7 @@
     check:
       jobs:
         - noop
-        - baseX
+        - baseX2
     gate:
       jobs:
         - noop
