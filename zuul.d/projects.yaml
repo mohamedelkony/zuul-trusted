@@ -5,6 +5,7 @@
     gate:
       jobs: []
 
+
 - project:
     name: mohamedelkony/zuul-trusted
     check:
