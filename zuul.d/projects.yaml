@@ -11,6 +11,7 @@
       jobs:
         - noop
         - baseXX
+        - baseX3
     gate:
       jobs:
         - noop
