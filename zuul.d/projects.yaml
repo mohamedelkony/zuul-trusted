@@ -11,7 +11,7 @@
     check:
       jobs:
         - noop
-        - baseX2
+        - testjob
     gate:
       jobs:
         - noop
