@@ -1,7 +1,10 @@
 - job:
-    name: base
+    name: baseXX
     parent: null
     nodeset:
       nodes:
         - name: ubuntu-jammy
           label: ubuntu-jammy
+- job:
+    name: testjob
+    run: playbooks/testjob.yaml

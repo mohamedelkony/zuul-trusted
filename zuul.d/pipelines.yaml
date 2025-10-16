@@ -13,12 +13,8 @@
     start-message: |
       Starting {pipeline.name} jobs.
       Status: {item_url}
-    require:
-      github:
-        open: True
-        current-patchset: True
     trigger:
-      github:
+      kony-github:
         - event: pull_request
           action:
             - opened
@@ -48,19 +44,17 @@
           check: .*/check:.*
           reject: *check-trigger-reject-github
     success:
-      github:
+      kony-github:
         check: success
         comment: false
     failure:
-      github:
+      kony-github:
         check: failure
     start:
-      gerrit:
-        Verified: 0
-      github:
+      kony-github:
         check: in_progress
         comment: false
     dequeue:
-      github:
+      kony-github:
         check: cancelled
         comment: false
