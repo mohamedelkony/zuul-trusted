@@ -7,4 +7,5 @@
           label: ubuntu-jammy
 - job:
     name: testjob
+    parent: baseXX
     run: playbooks/testjob.yaml
