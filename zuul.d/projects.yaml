@@ -10,8 +10,8 @@
     check:
       jobs:
         - noop
-        - baseXX
-        - baseX3
+        - testjob
+
     gate:
       jobs:
         - noop
