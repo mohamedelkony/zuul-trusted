@@ -2,13 +2,13 @@
     name: check
     description: >
       Newly created or updated GitHub pull requests enter this pipeline
-      and will report "suess" or "failure".
+      and will report "success" or "failure".
       For Gerrit, uploaded patchsets enter this pipeline to receive an initial
       +/-1 Verified vote from Zuul.
       For running a build again, add a comment "recheck" to the pull request
       respectively the change.
     manager: independent
-    suess-message: check jobs sueeded
+    success-message: check jobs sueeded
     failure-message: check jobs failed
     start-message: |
       Starting {pipeline.name} jobs.
@@ -45,7 +45,7 @@
           reject: *check-trigger-reject-github
     success:
       kony-github:
-        check: suess
+        check: success
         comment: false
     failure:
       kony-github:
