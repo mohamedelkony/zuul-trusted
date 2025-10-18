@@ -25,13 +25,13 @@
         current-patchset: true
         review:
           - type: approved
-        label: merge
+        label: pregate
         status: .*:.*check:success
     trigger:
       kony-github:
         - event: pull_request
           action: status
-          status: mohamedelkony:.*check:success
+          status: .*:.*check:success
           reject: &pregate-trigger-reject-github
             review:
               - type: changes_requested
@@ -63,7 +63,7 @@
           reject: *pregate-trigger-reject-github
         - event: pull_request
           action: labeled
-          label: merge
+          label: pregate
           reject: *pregate-trigger-reject-github
         # When a user selects the "Re-run check run" option
         - event: check_run
