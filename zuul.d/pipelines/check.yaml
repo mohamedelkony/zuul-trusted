@@ -43,7 +43,7 @@
           action: rerequested
           check: .*/check:.*
           reject: *check-trigger-reject-github
-    suess:
+    success:
       kony-github:
         check: suess
         comment: false
