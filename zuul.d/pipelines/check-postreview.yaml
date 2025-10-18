@@ -1,0 +1,54 @@
+- pipeline:
+    name: check-postreview
+    description: >
+      Reviewed GitHub pull requests enter this pipeline and will report
+      "success" or "failure".
+      from Zuul after the Code Review has been set to +2.
+      For running a build again, add a comment "recheck-postreview" to the pull
+      request respectively the change.
+    manager: independent
+    success-message: check-postreview jobs succeeded
+    failure-message: check-postreview jobs failed
+    start-message: |
+      Starting {pipeline.name} jobs.
+
+      Status: {item_url}
+    post-review: true
+    require:
+      kony-github:
+        open: true
+        current-patchset: true
+        review:
+          - type: approved
+    trigger:
+      kony-github:
+        - event: pull_request
+          action: comment
+          comment: (?i)^\s*\/?recheck-postreview\s*$
+          reject: &check-trigger-reject-github
+            # a status of None means the "gate" check run is in progress
+            # i.e. check run exists but has no conclusion, yet.
+            status: zuul:.*\/gate:None
+        - event: pull_request_review
+          action: submitted
+          state: approved
+          reject: *check-trigger-reject-github
+        - event: check_run
+          action: rerequested
+          check: .*/check-postreview:.*
+          reject: *check-trigger-reject-github
+    success:
+      kony-github:
+        check: success
+        comment: false
+    failure:
+      kony-github:
+        check: failure
+    start:
+      kony-github:
+        check: in_progress
+        comment: false
+    dequeue:
+      kony-github:
+        check: cancelled
+        comment: false

@@ -1,0 +1,98 @@
+- pipeline:
+    name: gate
+    description: >
+      GitHub pull requests or Gerrit changes that have been reviewed are
+      enqueued in order in this pipeline, and if they pass tests in Zuul, will
+      be merged.
+      For GitHub pull requests, this pipeline can be retriggered manually by
+      adding a comment "regate" to the pull request.
+      For Gerrit changes, it can also be retriggered with a "regate"
+      comment if the pipeline failed and have a Verified: -2 label.
+    manager: dependent
+    success-message: gate jobs succeeded
+    failure-message: gate jobs failed
+    start-message: |
+      Starting {pipeline.name} jobs.
+
+      Status: {item_url}
+    post-review: true
+    precedence: high
+    window-ceiling: 25
+    window-floor: 7
+    window-increase-factor: 2
+    supercedes:
+      - check
+    require:
+      kony-github:
+        open: true
+        merged: false
+        current-patchset: true
+        label: merge
+    reject:
+      gerrit:
+        approval:
+          - Code-Review: -2
+    trigger:
+      gerrit:
+        - event: comment-added
+          require:
+            approval:
+              - Code-Review: 2
+        - event: comment-added
+          require:
+            approval:
+              - Verified: 1
+        - event: comment-added
+          comment: (?i)^(Patch Set [0-9]+:)?( [\w\\+-]*)*(\n\n)?\s*regate(\s.*)?$
+      kony-github:
+        - event: pull_request
+          action: status
+          status:
+            - .*:success
+        - event: pull_request
+          action: comment
+          comment: (?i)^\s*\/?regate\s*$
+        - event: pull_request_review
+          action: submitted
+          state: approved
+        # Why gating when a review is dismissed?
+        # The usual use case is to dismiss a negative review from someone who
+        # is on vacation. After that, gating shall happen if there is also one
+        # positive review, thus the trigger.
+        - event: pull_request_review
+          action: dismissed
+          state: changes_requested
+        - event: pull_request
+          action: labeled
+          label:
+            - 'merge'
+        # When a user selects the "Re-run check run" option
+        - event: check_run
+          action: rerequested
+          check: .*/gate:.*
+        # Automatically trigger gate when a successful check run is reported
+        # (pipeline requirements must still be met for gate to be executed)
+        - event: check_run
+          action: completed
+          check: .*:success
+      # The parent-change-enqueued trigger makes sure that a child change
+      # is enqueued together with its parent change if the dependency is
+      # expressed with depends-on.
+      zuul:
+        - event: parent-change-enqueued
+    start:
+      kony-github:
+        check: in_progress
+        comment: false
+    success:
+      kony-github:
+        check: success
+        comment: false
+        merge: true
+    failure:
+      kony-github:
+        check: failure
+    dequeue:
+      kony-github:
+        check: cancelled
+        comment: false
