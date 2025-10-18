@@ -3,8 +3,6 @@
     description: >
       This pipeline is a independent pipeline that runs before the gate.
       It is automatically triggered when the merge label is set, checks are successful and the code-owners approved.
-      It can be retriggered by comment if preconditions are met.
-      It can be skipped by setting the "skip-pregate" label,
       The pipeline will check for the "skip-pregate" label during execution and only execute a noop.
       You can retrigger this pipeline with the `repregate` comment.
     manager: independent
