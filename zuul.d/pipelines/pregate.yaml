@@ -33,7 +33,7 @@
           reject: &pregate-trigger-reject-github
             review:
               - type: changes_requested
-            status: .*:.*\/pregate:success
+            status: .*:.*pregate:success
         - event: pull_request
           action: comment
           comment: (?i)^\s*repregate\s*$
