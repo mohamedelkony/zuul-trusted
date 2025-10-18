@@ -28,22 +28,7 @@
         merged: false
         current-patchset: true
         label: merge
-    reject:
-      gerrit:
-        approval:
-          - Code-Review: -2
     trigger:
-      gerrit:
-        - event: comment-added
-          require:
-            approval:
-              - Code-Review: 2
-        - event: comment-added
-          require:
-            approval:
-              - Verified: 1
-        - event: comment-added
-          comment: (?i)^(Patch Set [0-9]+:)?( [\w\\+-]*)*(\n\n)?\s*regate(\s.*)?$
       kony-github:
         - event: pull_request
           action: status
