@@ -1,0 +1,105 @@
+- pipeline:
+    name: pregate
+    description: >
+      This pipeline is a independent pipeline that runs before the gate.
+      It is automatically triggered when the merge label is set, checks are successful and the code-owners approved.
+      It can be retriggered by comment if preconditions are met.
+      It can be skipped by setting the "skip-pregate" label,
+      The pipeline will check for the "skip-pregate" label during execution and only execute a noop.
+      You can retrigger this pipeline with the `repregate` comment.
+    manager: independent
+    success-message: pregate jobs succeeded
+    failure-message: |
+        pregate jobs failed
+        Further information on what to do next can be found here:
+    start-message: |
+        Starting pregate
+        More information about the pregate can be found here:
+        Status: {item_url}
+    post-review: True
+    precedence: high
+    require:
+      kony-github:
+        open: true
+        merged: false
+        current-patchset: true
+        review:
+          - type: approved
+        label: merge
+        status: zuul:.*check:success
+    trigger:
+      kony-github:
+        - event: pull_request
+          action: status
+          status: zuul:.*check:success
+          reject: &pregate-trigger-reject-github
+            review:
+              - type: changes_requested
+            status: zuul:.*\/pregate:success
+        - event: pull_request
+          action: comment
+          comment: (?i)^\s*repregate\s*$
+          reject:
+            review:
+              - type: changes_requested
+        - event: pull_request
+          action: comment
+          comment: (?i)^\s*repregate-debug\s*$
+          debug: true
+          reject:
+            review:
+              - type: changes_requested
+        - event: pull_request_review
+          action: submitted
+          state: approved
+          reject: *pregate-trigger-reject-github
+        # Why gating when a review is dismissed?
+        # The usual use case is to dismiss a negative review from someone who
+        # is on vacation. After that, gating shall happen if there is also one
+        # positive review, thus the trigger.
+        - event: pull_request_review
+          action: dismissed
+          state: changes_requested
+          reject: *pregate-trigger-reject-github
+        - event: pull_request
+          action: labeled
+          label: merge
+          reject: *pregate-trigger-reject-github
+        - event: pull_request
+          action: labeled
+          label: ccb-approved
+          reject: *pregate-trigger-reject-github
+        # When a user selects the "Re-run check run" option
+        - event: check_run
+          action: rerequested
+          check: .*/pregate:.*
+          reject:
+            review:
+              - type: changes_requested
+        # Automatically trigger pregate when a successful check run is reported
+        # (pipeline requirements must still be met for pregate to be executed)
+        - event: check_run
+          action: completed
+          check: zuul:.*check:success
+          reject: *pregate-trigger-reject-github
+      # The parent-change-enqueued trigger makes sure that a child change
+      # is enqueued together with its parent change if the dependency is
+      # expressed with depends-on.
+      zuul:
+        - event: parent-change-enqueued
+    start:
+      kony-github:
+        check: in_progress
+        comment: false
+    success:
+      kony-github:
+        check: success
+        comment: true
+    failure:
+      kony-github:
+        check: failure
+        comment: true
+    dequeue:
+      kony-github:
+        check: cancelled
+        comment: false

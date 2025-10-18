@@ -11,8 +11,19 @@
       jobs:
         - noop
         - testjob
-
+    
+    check-postreview:
+      jobs:
+        - noop
+        - testjob
+    pregate:
+      jobs:
+        - noop
+        - testjob
+        
     gate:
       jobs:
         - noop
+        - testjob
+
 
