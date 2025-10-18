@@ -26,7 +26,7 @@
         review:
           - type: approved
         label: merge
-        status: mohamedelkony:.*check:success
+        status: testZ1111:.*check:success
     trigger:
       kony-github:
         - event: pull_request
@@ -35,7 +35,7 @@
           reject: &pregate-trigger-reject-github
             review:
               - type: changes_requested
-            status: zuul:.*\/pregate:success
+            status: testZ1111:.*\/pregate:success
         - event: pull_request
           action: comment
           comment: (?i)^\s*repregate\s*$
@@ -76,7 +76,7 @@
         # (pipeline requirements must still be met for pregate to be executed)
         - event: check_run
           action: completed
-          check: mohamedelkony:.*check:success
+          check: testZ1111:.*check:success
           reject: *pregate-trigger-reject-github
       # The parent-change-enqueued trigger makes sure that a child change
       # is enqueued together with its parent change if the dependency is
