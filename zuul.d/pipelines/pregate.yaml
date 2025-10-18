@@ -26,12 +26,12 @@
         review:
           - type: approved
         label: merge
-        status: zuul:.*check:success
+        status: mohamedelkony:.*check:success
     trigger:
       kony-github:
         - event: pull_request
           action: status
-          status: zuul:.*check:success
+          status: mohamedelkony:.*check:success
           reject: &pregate-trigger-reject-github
             review:
               - type: changes_requested
@@ -65,10 +65,6 @@
           action: labeled
           label: merge
           reject: *pregate-trigger-reject-github
-        - event: pull_request
-          action: labeled
-          label: ccb-approved
-          reject: *pregate-trigger-reject-github
         # When a user selects the "Re-run check run" option
         - event: check_run
           action: rerequested
@@ -80,7 +76,7 @@
         # (pipeline requirements must still be met for pregate to be executed)
         - event: check_run
           action: completed
-          check: zuul:.*check:success
+          check: mohamedelkony:.*check:success
           reject: *pregate-trigger-reject-github
       # The parent-change-enqueued trigger makes sure that a child change
       # is enqueued together with its parent change if the dependency is
@@ -90,7 +86,7 @@
     start:
       kony-github:
         check: in_progress
-        comment: false
+        comment: true
     success:
       kony-github:
         check: success
@@ -102,4 +98,4 @@
     dequeue:
       kony-github:
         check: cancelled
-        comment: false
+        comment: true
